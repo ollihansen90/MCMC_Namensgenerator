@@ -10,20 +10,26 @@ st.write("Dieser Namensgenerator basiert auf einem Markov-Chain-Monte-Carlo-Algo
 st.html("""Unseren Code finden wir bei Colab: (Musterlösung) <a href="https://colab.research.google.com/github/ollihansen90/Mathe-SH/blob/main/MCMC_Namensgenerator_MatheSH.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab" rel="noopener noreferrer"/></a>""")
 
 st.markdown("### Wähle Hyperparameter:")
-dataset = st.selectbox("Datensatz", ["Harry Potter", "Herr der Ringe", "Star Wars", "Marvel", "Deutsche Städte"], 0)
-mapping = {"Harry Potter": "harrypotternames", "Herr der Ringe": "lotrnames", "Star Wars": "starwarsnames", "Marvel": "marvelnames", "Deutsche Städte": "staedtenamen"}
+dataset = st.selectbox("Datensatz", ["Harry Potter", "Herr der Ringe", "Star Wars", "Marvel", "Deutsche Städte", "Apfelsorten"], 0)
+mapping = {"Harry Potter": "harrypotternames", "Herr der Ringe": "lotrnames", "Star Wars": "starwarsnames", "Marvel": "marvelnames", "Deutsche Städte": "staedtenamen", "Apfelsorten": "apfelsorten"}
 tlen = st.slider("Tokenlänge", 1, 10, 4)
-seed = st.text_input("Seed", "0")
-random.seed(seed)
+#seed = st.text_input("Seed", "0")
+#random.seed(seed)
 #data = load_data("harrypotternames")
 #data = load_data("lotrnames")
 data = load_data(mapping[dataset])
 #data = load_data("starwarsnames")
 mcmc = MCMC(data, tlen)
 namelist = []
-for i in range(10):
+for i in range(7):
     namelist.append(mcmc.generate())
 
-st.markdown(f"""### Generierte Namen:
-{"".join(["- "+name+"\n" for name in namelist])}""")
+for i in range(3):
+    namelist.append(random.choice(data))
+
+random.shuffle(namelist)
+
+st.markdown(f"""### :smile: Echt :smile: oder :robot_face: generiert :robot_face:?""")
+for name in namelist:
+    st.markdown("- "+name, help=":smile: echt :smile:" if name in data else ":robot_face: generiert :robot_face:")
 st.button("MEHR")
